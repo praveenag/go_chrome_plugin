@@ -1,0 +1,16 @@
+{
+  "name": "Go Notifications",
+  "version": "1",
+  "description":
+    "Gives notifications from \"Go\" url",
+  "icons": {"16": "16.png", "48": "48.png", "128": "128.png"},
+  "permissions": ["tabs", "notifications"],
+  "options_page": "options.html",
+  "background": { "scripts": ["background.js"] },
+  "manifest_version": 2,
+
+  // crbug.com/134315
+  "web_accessible_resources": [
+    "48.png"
+  ]
+}
