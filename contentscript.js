@@ -12,6 +12,8 @@
  *     response.  Otherwise, this function is called with null.
  */
 function fetchCCTrayFeed(callback) {
+  console.log("contentscript");
+
   var xhr = new XMLHttpRequest();
   xhr.onreadystatechange = function(data) {
     if (xhr.readyState == 4) {
@@ -20,8 +22,8 @@ function fetchCCTrayFeed(callback) {
         var books = xml.getElementsByTagName('book');
           // var data = books[i].getAttribute('category')
         var data = books;
-        console.log(data);
         callback(data);
+        console.log(window.webkitNotifications)
         }
       else {
         callback(null);

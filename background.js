@@ -1,17 +1,56 @@
-function show() {
+function show(content) {
+  console.log("show");
+
   var time = /(..)(:..)/.exec(new Date());     // The prettyprinted time.
   var hour = time[1] % 12 || 12;               // The prettyprinted hour.
   var period = time[1] < 12 ? 'a.m.' : 'p.m.'; // The period of the day.
-  var content = localStorage.gourl
   var notification = window.webkitNotifications.createNotification(
     '48.png',                      // The image.
     hour + time[2] + ' ' + period, // The title.
     content // The body.
-  );
-  notification.show();
+  ).show();
 }
 
+function fetchCCTrayFeed(callback) {
+  console.log("fetch");
+
+  var xhr = new XMLHttpRequest();
+  xhr.onreadystatechange = function(data) {
+    if (xhr.readyState == 4) {
+      if (xhr.status == 200) {
+        var xml = xhr.responseXML
+        var books = xml.getElementsByTagName('book');
+          // var data = books[i].getAttribute('category')
+        var data = books;
+        callback(data);
+        }
+      else {
+        callback(null);
+      }
+    }
+  }
+  xhr.open('GET', localStorage.gourl, true);
+  xhr.send();
+};
+
+function displayText(data) {
+  console.log("displayText");
+
+  // Only render the bar if the data is parsed into a format we recognize.
+  if (data) {
+    var content = "";
+    for (var i=0, trend; trend = data[i]; i++) {
+        var category = trend.getAttribute('category');
+        content+= " "+category;
+    }
+    show(content);
+  }
+};
+
+function load(){
 // Conditionally initialize the options.
+  console.log("load");
+
 if (!localStorage.isInitialized) {
   localStorage.isActivated = true;   // The display activation.
   localStorage.frequency = 1;        // The display frequency, in minutes.
@@ -22,19 +61,21 @@ if (!localStorage.isInitialized) {
 // Test for notification support.
 if (window.webkitNotifications) {
   // While activated, show notifications at the display frequency.
-  if (JSON.parse(localStorage.isActivated)) { show(); }
+  if (JSON.parse(localStorage.isActivated)) { fetchCCTrayFeed(displayText); }
 
   var interval = 0; // The display interval, in minutes.
 
   setInterval(function() {
     interval++;
-
     if (
       JSON.parse(localStorage.isActivated) &&
         localStorage.frequency <= interval
     ) {
-      show();
+      fetchCCTrayFeed(displayText);
       interval = 0;
     }
   }, 60000);
 }
+
+}
+load()
