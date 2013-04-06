@@ -4,7 +4,7 @@
   "description":
     "Gives notifications from \"Go\" url",
   "icons": {"16": "16.png", "48": "48.png", "128": "128.png"},
-  "permissions": ["tabs", "notifications", "http://*/*", "https://*/*"],
+  "permissions": ["tabs", "notifications", "http://*/*", "https://*/*", "file:///Users/praveeg/Downloads/cctray.xml"],
   "options_page": "options.html",
   "background": { "scripts": ["background.js"] },
   "manifest_version": 2,

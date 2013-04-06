@@ -1,6 +1,5 @@
 function show(content) {
   console.log("show");
-
   var time = /(..)(:..)/.exec(new Date());     // The prettyprinted time.
   var hour = time[1] % 12 || 12;               // The prettyprinted hour.
   var period = time[1] < 12 ? 'a.m.' : 'p.m.'; // The period of the day.
@@ -17,16 +16,14 @@ function fetchCCTrayFeed(callback) {
   var xhr = new XMLHttpRequest();
   xhr.onreadystatechange = function(data) {
     if (xhr.readyState == 4) {
-      if (xhr.status == 200) {
+      // if (xhr.status == 200) {
         var xml = xhr.responseXML
-        var books = xml.getElementsByTagName('book');
-          // var data = books[i].getAttribute('category')
-        var data = books;
-        callback(data);
-        }
-      else {
-        callback(null);
-      }
+        var projects = xml.getElementsByTagName('Project');
+        callback(projects);
+        // }
+      // else {
+        // callback(null);
+      // }
     }
   }
   xhr.open('GET', localStorage.gourl, true);
@@ -35,13 +32,12 @@ function fetchCCTrayFeed(callback) {
 
 function displayText(data) {
   console.log("displayText");
-
-  // Only render the bar if the data is parsed into a format we recognize.
   if (data) {
     var content = "";
     for (var i=0, trend; trend = data[i]; i++) {
-        var category = trend.getAttribute('category');
-        content+= " "+category;
+        var name = trend.getAttribute('name');
+        var status = trend.getAttribute('lastBuildStatus');
+        content+= " " + name + " " + status;
     }
     show(content);
   }
